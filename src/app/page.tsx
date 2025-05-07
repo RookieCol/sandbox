@@ -11,6 +11,7 @@ import { defineChain, getContract, type NFT } from "thirdweb";
 import { claimTo } from "thirdweb/extensions/erc721";
 import { getOwnedNFTs } from "thirdweb/extensions/erc721";
 import { useReadContract } from "thirdweb/react";
+import { Router } from "next/router";
 
 export default function Home() {
   const account = useActiveAccount();
@@ -26,6 +27,8 @@ export default function Home() {
     owner: account?.address || "",
     queryOptions: {
       enabled: !!account?.address,
+      refetchInterval: 1000, // optional, for polling
+      retry: 2
     },
   });
 
@@ -57,7 +60,7 @@ export default function Home() {
               }}
               onTransactionConfirmed={(receipt) => {
                 console.log("Transaction confirmed", receipt.transactionHash);
-                refetch();
+                window.location.reload();
               }}
               onError={(error) => {
                 console.error("Transaction error", error);
